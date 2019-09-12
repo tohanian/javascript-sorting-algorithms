@@ -3,18 +3,25 @@
     <div class="sorting-options-wrapper">
       <SortOptions
         :showHeights="showHeights"
+        :showColorScale="showColorScale"
         @shuffle="onShuffle"
         @showHeights="onShowHeights"
+        @showColorScale="onShowColorScale"
       />
     </div>
     <div class="sorting-vis-wrapper">
-      <SortVis :collection="collection" :showHeights="showHeights" />
+      <SortVis
+        :collection="collection"
+        :showHeights="showHeights"
+        :showColorScale="showColorScale"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { scaleLinear } from 'd3-scale';
+import { scaleLinear, scaleSequential } from 'd3-scale';
+import { interpolateTurbo } from 'd3-scale-chromatic';
 import SortVis from '../components/SortVis.vue';
 import SortOptions from '../components/SortOptions.vue';
 
@@ -29,11 +36,15 @@ export default {
       collection: [],
       numOfElements: 25,
       showHeights: true,
+      showColorScale: true,
     };
   },
   computed: {
     heightScale() {
       return scaleLinear().domain([0, this.numOfElements]).range([1, 100]);
+    },
+    colorScale() {
+      return scaleSequential(interpolateTurbo).domain([0, this.numOfElements]);
     },
   },
   created() {
@@ -47,6 +58,7 @@ export default {
           value: i,
           flag: 'none',
           height: this.heightScale(i),
+          colorScale: this.colorScale(i),
         });
       }
       return collection;
@@ -63,6 +75,9 @@ export default {
     },
     onShowHeights() {
       this.showHeights = !this.showHeights;
+    },
+    onShowColorScale() {
+      this.showColorScale = !this.showColorScale;
     },
   },
 };

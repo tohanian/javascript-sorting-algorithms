@@ -10,7 +10,10 @@
         </Button>
       </div>
       <div class="ui-item">
-        <Checkbox text="Show Heights" :value="showHeights" @click="$emit('showHeights')" />
+        <Checkbox text="Show heights" :value="showHeights" @click="$emit('showHeights')" />
+      </div>
+      <div class="ui-item">
+        <Checkbox text="Show colors" :value="showColorScale" @click="$emit('showColorScale')" />
       </div>
     </div>
   </div>
@@ -26,8 +29,12 @@ export default {
   props: {
     showHeights: {
       type: Boolean,
-      default: false,
+      default: true,
     },
+    showColorScale: {
+      type: Boolean,
+      default: true,
+    }
   },
 };
 </script>

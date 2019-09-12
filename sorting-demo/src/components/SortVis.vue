@@ -4,7 +4,10 @@
       class="sort-item"
       v-for="item in collection"
       :key="item.value"
-      :style="{ height: `${showHeights ? item.height : '100'}%`}"
+      :style="{
+        height: `${showHeights ? item.height : '100'}%`,
+        background: showColorScale ? item.colorScale : '#EE4266',
+      }"
     />
   </div>
 </template>
@@ -21,6 +24,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    showColorScale: {
+      type: Boolean,
+      default: true,
+    },
   },
 };
 </script>
@@ -33,7 +40,6 @@ export default {
   align-items: flex-end;
   .sort-item {
     flex-basis: 100%;
-    background: #EE4266;
     margin: 0 1px;
   }
 }
