@@ -11,24 +11,23 @@
 
 <script>
 export default {
-
-}
+  name: 'Button',
+};
 </script>
 
 <style lang="scss" scoped>
+@import '../styles/mixins.scss';
+
 .button {
+  @include ui-element;
   padding: 6px 12px;
   background: none;
   border: 1px solid #FFD23F;
-  color: #FFD23F;
   border-radius: 0;
   outline: none;
   box-shadow: none;
   cursor: pointer;
   font-family: 'Space Mono', monospace;
-  text-transform: lowercase;
-  font-size: 14px;
-  letter-spacing: .2em;
   .button-content {
     position: relative;
     .button-text {

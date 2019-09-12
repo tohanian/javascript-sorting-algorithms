@@ -2,16 +2,19 @@
   <div class="home">
     <div class="sorting-options-wrapper">
       <SortOptions
+        :showHeights="showHeights"
         @shuffle="onShuffle"
+        @showHeights="onShowHeights"
       />
     </div>
     <div class="sorting-vis-wrapper">
-      <SortVis :collection="collection" />
+      <SortVis :collection="collection" :showHeights="showHeights" />
     </div>
   </div>
 </template>
 
 <script>
+import { scaleLinear } from 'd3-scale';
 import SortVis from '../components/SortVis.vue';
 import SortOptions from '../components/SortOptions.vue';
 
@@ -25,7 +28,13 @@ export default {
     return {
       collection: [],
       numOfElements: 25,
+      showHeights: true,
     };
+  },
+  computed: {
+    heightScale() {
+      return scaleLinear().domain([0, this.numOfElements]).range([1, 100]);
+    },
   },
   created() {
     this.collection = this.initializeCollection();
@@ -34,7 +43,11 @@ export default {
     initializeCollection() {
       const collection = [];
       for (let i = 0; i < this.numOfElements; i += 1) {
-        collection.push({ value: i, flag: 'none' });
+        collection.push({
+          value: i,
+          flag: 'none',
+          height: this.heightScale(i),
+        });
       }
       return collection;
     },
@@ -47,6 +60,9 @@ export default {
         [collection[i], collection[j]] = [collection[j], collection[i]];
       }
       return collection;
+    },
+    onShowHeights() {
+      this.showHeights = !this.showHeights;
     },
   },
 };
