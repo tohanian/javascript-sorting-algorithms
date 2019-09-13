@@ -4,9 +4,12 @@
       <SortOptions
         :showHeights="showHeights"
         :showColorScale="showColorScale"
+        :sortTypeItems="sortTypeItems"
+        :sortType="sortType"
         @shuffle="onShuffle"
         @showHeights="onShowHeights"
         @showColorScale="onShowColorScale"
+        @sortTypeSelect="onSortTypeSelect"
       />
     </div>
     <div class="sorting-vis-wrapper">
@@ -37,6 +40,10 @@ export default {
       numOfElements: 25,
       showHeights: true,
       showColorScale: true,
+      sortType: null,
+      sortTypeItems: [{
+        text: 'Insertion Sort', value: 'insertionSort',
+      }],
     };
   },
   computed: {
@@ -78,6 +85,9 @@ export default {
     },
     onShowColorScale() {
       this.showColorScale = !this.showColorScale;
+    },
+    onSortTypeSelect(sortType) {
+      this.sortType = sortType;
     },
   },
 };
