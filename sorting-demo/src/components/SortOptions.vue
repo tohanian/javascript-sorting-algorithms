@@ -17,6 +17,9 @@
           @input="(sortType) => $emit('sortTypeSelect', sortType)"
         />
       </div>
+      <div class="ui-item">
+        <PlayButton />
+      </div>
     </div>
     <div class="ui-row">
       <div class="ui-item">
@@ -33,10 +36,13 @@
 import Button from './Button.vue';
 import Checkbox from './Checkbox.vue';
 import Select from './Select.vue';
+import PlayButton from './PlayButton.vue';
 
 export default {
   name: 'SortOptions',
-  components: { Button, Checkbox, Select },
+  components: {
+    Button, Checkbox, Select, PlayButton,
+  },
   props: {
     showHeights: {
       type: Boolean,
