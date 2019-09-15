@@ -18,7 +18,10 @@
         />
       </div>
       <div class="ui-item">
-        <PlayButton />
+        <PlayButton
+          :sortInProcess="sortInProcess"
+          @click="$emit('playButtonClick')"
+        />
       </div>
     </div>
     <div class="ui-row">
@@ -59,6 +62,10 @@ export default {
     sortType: {
       type: String,
       default: null,
+    },
+    sortInProcess: {
+      type: Boolean,
+      default: false,
     },
   },
 };

@@ -6,10 +6,12 @@
         :showColorScale="showColorScale"
         :sortTypeItems="sortTypeItems"
         :sortType="sortType"
+        :sortInProcess="sortInProcess"
         @shuffle="onShuffle"
         @showHeights="onShowHeights"
         @showColorScale="onShowColorScale"
         @sortTypeSelect="onSortTypeSelect"
+        @playButtonClick="onPlayButtonClick"
       />
     </div>
     <div class="sorting-vis-wrapper">
@@ -37,13 +39,26 @@ export default {
   data() {
     return {
       collection: [],
-      numOfElements: 25,
-      showHeights: true,
-      showColorScale: true,
-      sortType: null,
+      sortType: 'insertionSort',
       sortTypeItems: [{
         text: 'Insertion Sort', value: 'insertionSort',
       }],
+
+      // Visualization params
+      numOfElements: 40,
+      showHeights: true,
+      showColorScale: true,
+      sortSpeed: 1,
+
+      // Sort states
+      sortInProcess: false,
+      outerLoopIndex: 0,
+      outerLoopTimeout: undefined,
+      innerLoopIndex: undefined,
+      innerLoopTimeout: undefined,
+
+      // Insertion sort states
+      insertItem: null,
     };
   },
   computed: {
@@ -88,6 +103,95 @@ export default {
     },
     onSortTypeSelect(sortType) {
       this.sortType = sortType;
+    },
+    onPlayButtonClick() {
+      this.sortInProcess = !this.sortInProcess;
+
+      if (this.sortInProcess) {
+        this.startSorting();
+      } else {
+        this.stopSorting();
+      }
+    },
+    stopSorting() {
+      clearTimeout(this.innerLoopTimeout);
+      clearTimeout(this.outerLoopTimeout);
+      this.outerLoopIndex = this.innerLoopIndex + 1;
+    },
+    startSorting() {
+      if (this.sortType && this[this.sortType]) {
+        this[this.sortType]();
+      }
+    },
+    insertionSort() {
+      let valuesToSort = [...this.collection];
+
+      const insertionSortOuterLoop = (outerLoopIndex) => {
+        let i = outerLoopIndex;
+        this.$set(this.collection, i, { ...this.collection[i], flag: 'insertItem' });
+
+
+        this.outerLoopTimeout = setTimeout(() => {
+          const temp = valuesToSort[i];
+
+          const insertionSortInnerLoop = (innerLoopIndex) => {
+            let j = innerLoopIndex;
+
+            this.innerLoopTimeout = setTimeout(() => {
+              if (j >= 0 && valuesToSort[j].value > temp.value) {
+                valuesToSort[j + 1] = valuesToSort[j];
+
+                this.collection = valuesToSort.map((item, index) => {
+                  if (index === j) {
+                    return temp;
+                  }
+                  return item;
+                });
+
+                this.insertItem = temp;
+
+                j -= 1;
+                this.innerLoopIndex = j;
+
+                insertionSortInnerLoop(j);
+              } else {
+                valuesToSort = valuesToSort.map((item) => {
+                  if (item.flag === 'lastInserted') {
+                    return { ...item, flag: 'sortedItem' };
+                  }
+                  return item;
+                });
+                valuesToSort[j + 1] = { ...temp, flag: 'lastInserted' };
+
+                this.collection = valuesToSort;
+
+                i += 1;
+
+                if (i < this.collection.length) {
+                  this.outerLoopIndex = i;
+                  insertionSortOuterLoop(i);
+                } else {
+                  this.onSortComplete();
+                }
+              }
+            }, this.sortSpeed);
+          };
+
+          insertionSortInnerLoop(i - 1);
+        }, this.sortSpeed);
+      };
+
+      insertionSortOuterLoop(this.outerLoopIndex);
+    },
+    onSortComplete() {
+      this.sortInProcess = false;
+      this.resetSortState();
+    },
+    resetSortState() {
+      this.outerLoopIndex = 0;
+      this.innerLoopIndex = undefined;
+      clearTimeout(this.outerLoopTimeout);
+      clearTimeout(this.innerLoopTimeout);
     },
   },
 };

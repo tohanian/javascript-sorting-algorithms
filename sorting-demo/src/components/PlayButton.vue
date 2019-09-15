@@ -32,6 +32,12 @@ import { transition } from 'd3-transition';
 
 export default {
   name: 'PlayButton',
+  props: {
+    sortInProcess: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       states: {
@@ -45,16 +51,28 @@ export default {
         },
       },
       animationDuration: 325,
-      state: {},
     };
   },
   computed: {
+    state() {
+      if (this.sortInProcess) {
+        return this.states.playing;
+      }
+      return this.states.paused;
+    },
     isPlaying() {
       return this.state.iconRef === 'pauseIcon';
     },
   },
+  watch: {
+    sortInProcess(val) {
+      select(this.$refs.playButton.querySelector('.js-icon'))
+        .transition()
+        .duration(this.animationDuration)
+        .attr('d', this.stateIconPath());
+    },
+  },
   mounted() {
-    this.state = this.states.paused;
     this.replaceUseEl();
   },
   methods: {
@@ -67,16 +85,7 @@ export default {
     },
 
     goToNextState() {
-      this.setState(this.state.nextState);
-
-      select(this.$refs.playButton.querySelector('.js-icon'))
-        .transition()
-        .duration(this.animationDuration)
-        .attr('d', this.stateIconPath());
-    },
-
-    setState(stateName) {
-      this.state = this.states[stateName];
+      this.$emit('click');
     },
 
     stateIconPath() {

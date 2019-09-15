@@ -6,7 +6,7 @@
       :key="item.value"
       :style="{
         height: `${showHeights ? item.height : '100'}%`,
-        background: showColorScale ? item.colorScale : '#EE4266',
+        background: getItemColor(item),
       }"
     />
   </div>
@@ -27,6 +27,16 @@ export default {
     showColorScale: {
       type: Boolean,
       default: true,
+    },
+  },
+  methods: {
+    getItemColor(item) {
+      // if (item.flag === 'insertItem') {
+      //   return '#ff00cc';
+      // } else if (item.flag === 'lastInserted') {
+      //   return 'white';
+      // }
+      return this.showColorScale ? item.colorScale : '#EE4266';
     },
   },
 };
