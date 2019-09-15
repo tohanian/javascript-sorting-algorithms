@@ -31,6 +31,9 @@
       <div class="ui-item">
         <Checkbox text="Show colors" :value="showColorScale" @click="$emit('showColorScale')" />
       </div>
+      <div class="ui-item">
+        <Checkbox text="Highlight changes" :value="showChanges" @click="$emit('showChanges')" />
+      </div>
     </div>
   </div>
 </template>
@@ -64,6 +67,10 @@ export default {
       default: null,
     },
     sortInProcess: {
+      type: Boolean,
+      default: false,
+    },
+    showChanges: {
       type: Boolean,
       default: false,
     },

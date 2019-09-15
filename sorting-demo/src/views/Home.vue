@@ -7,11 +7,13 @@
         :sortTypeItems="sortTypeItems"
         :sortType="sortType"
         :sortInProcess="sortInProcess"
+        :showChanges="showChanges"
         @shuffle="onShuffle"
         @showHeights="onShowHeights"
         @showColorScale="onShowColorScale"
         @sortTypeSelect="onSortTypeSelect"
         @playButtonClick="onPlayButtonClick"
+        @showChanges="onShowChanges"
       />
     </div>
     <div class="sorting-vis-wrapper">
@@ -19,6 +21,7 @@
         :collection="collection"
         :showHeights="showHeights"
         :showColorScale="showColorScale"
+        :showChanges="showChanges"
       />
     </div>
   </div>
@@ -48,7 +51,8 @@ export default {
       numOfElements: 40,
       showHeights: true,
       showColorScale: true,
-      sortSpeed: 1,
+      sortSpeed: 200,
+      showChanges: false,
 
       // Sort states
       sortInProcess: false,
@@ -171,7 +175,13 @@ export default {
                   this.outerLoopIndex = i;
                   insertionSortOuterLoop(i);
                 } else {
-                  this.onSortComplete();
+                  setTimeout(() => {
+                    this.collection = this.collection.map(item => ({
+                      ...item,
+                      flag: 'none',
+                    }));
+                    this.onSortComplete();
+                  }, this.sortSpeed);
                 }
               }
             }, this.sortSpeed);
@@ -192,6 +202,9 @@ export default {
       this.innerLoopIndex = undefined;
       clearTimeout(this.outerLoopTimeout);
       clearTimeout(this.innerLoopTimeout);
+    },
+    onShowChanges() {
+      this.showChanges = !this.showChanges;
     },
   },
 };

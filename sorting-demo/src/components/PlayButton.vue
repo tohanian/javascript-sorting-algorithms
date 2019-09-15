@@ -65,7 +65,7 @@ export default {
     },
   },
   watch: {
-    sortInProcess(val) {
+    sortInProcess() {
       select(this.$refs.playButton.querySelector('.js-icon'))
         .transition()
         .duration(this.animationDuration)

@@ -7,6 +7,7 @@
       :style="{
         height: `${showHeights ? item.height : '100'}%`,
         background: getItemColor(item),
+        border: `1px solid ${getItemBorderColor(item)}`
       }"
     />
   </div>
@@ -28,15 +29,27 @@ export default {
       type: Boolean,
       default: true,
     },
+    showChanges: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     getItemColor(item) {
-      // if (item.flag === 'insertItem') {
-      //   return '#ff00cc';
-      // } else if (item.flag === 'lastInserted') {
-      //   return 'white';
-      // }
-      return this.showColorScale ? item.colorScale : '#EE4266';
+      const baseColor = this.showColorScale ? item.colorScale : '#EE4266';
+      if (this.showChanges && item.flag === 'insertItem') {
+        return 'white';
+      }
+      return baseColor;
+    },
+    getItemBorderColor(item) {
+      let borderColor = 'black';
+      if (this.showChanges) {
+        if (item.flag === 'insertItem' || item.flag === 'lastInserted') {
+          borderColor = 'white';
+        }
+      }
+      return borderColor;
     },
   },
 };
@@ -50,7 +63,7 @@ export default {
   align-items: flex-end;
   .sort-item {
     flex-basis: 100%;
-    margin: 0 1px;
+    transition: background-color 1.1s ease-out;
   }
 }
 </style>
