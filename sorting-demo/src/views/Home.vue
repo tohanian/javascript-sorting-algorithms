@@ -24,6 +24,9 @@
         :showChanges="showChanges"
       />
     </div>
+    <div class="speed-slider-wrapper">
+      <SpeedSlider :value="speedSliderValue" @input="onSpeedSliderInput" />
+    </div>
   </div>
 </template>
 
@@ -32,12 +35,14 @@ import { scaleLinear, scaleSequential } from 'd3-scale';
 import { interpolateTurbo } from 'd3-scale-chromatic';
 import SortVis from '../components/SortVis.vue';
 import SortOptions from '../components/SortOptions.vue';
+import SpeedSlider from '../components/SpeedSlider.vue';
 
 export default {
   name: 'home',
   components: {
     SortVis,
     SortOptions,
+    SpeedSlider,
   },
   data() {
     return {
@@ -51,8 +56,8 @@ export default {
       numOfElements: 40,
       showHeights: true,
       showColorScale: true,
-      sortSpeed: 200,
       showChanges: false,
+      speedSliderValue: 85,
 
       // Sort states
       sortInProcess: false,
@@ -60,9 +65,6 @@ export default {
       outerLoopTimeout: undefined,
       innerLoopIndex: undefined,
       innerLoopTimeout: undefined,
-
-      // Insertion sort states
-      insertItem: null,
     };
   },
   computed: {
@@ -71,6 +73,9 @@ export default {
     },
     colorScale() {
       return scaleSequential(interpolateTurbo).domain([0, this.numOfElements]);
+    },
+    sortSpeed() {
+      return scaleLinear().domain([0, 100]).range([500, 1])(this.speedSliderValue);
     },
   },
   created() {
@@ -152,8 +157,6 @@ export default {
                   return item;
                 });
 
-                this.insertItem = temp;
-
                 j -= 1;
                 this.innerLoopIndex = j;
 
@@ -206,6 +209,9 @@ export default {
     onShowChanges() {
       this.showChanges = !this.showChanges;
     },
+    onSpeedSliderInput(speedSliderValue) {
+      this.speedSliderValue = speedSliderValue;
+    },
   },
 };
 </script>
@@ -225,6 +231,11 @@ export default {
     width: 92%;
     height: 100%;
     margin: 20px auto;
+  }
+  .speed-slider-wrapper {
+    width: 92%;
+    margin: 10px auto;
+    max-width: 400px;
   }
 }
 </style>
