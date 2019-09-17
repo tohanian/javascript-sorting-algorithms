@@ -34,6 +34,9 @@
       <div class="ui-item">
         <Checkbox text="Highlight changes" :value="showChanges" @click="$emit('showChanges')" />
       </div>
+      <div class="ui-item">
+        <NumOfElementsSlider :value="numOfElementsSliderValue" @input="onNumOfElementsInput" />
+      </div>
     </div>
   </div>
 </template>
@@ -43,11 +46,12 @@ import Button from './Button.vue';
 import Checkbox from './Checkbox.vue';
 import Select from './Select.vue';
 import PlayButton from './PlayButton.vue';
+import NumOfElementsSlider from './NumOfElementsSlider.vue';
 
 export default {
   name: 'SortOptions',
   components: {
-    Button, Checkbox, Select, PlayButton,
+    Button, Checkbox, Select, PlayButton, NumOfElementsSlider,
   },
   props: {
     showHeights: {
@@ -73,6 +77,15 @@ export default {
     showChanges: {
       type: Boolean,
       default: false,
+    },
+    numOfElementsSliderValue: {
+      type: Number,
+      default: 4,
+    },
+  },
+  methods: {
+    onNumOfElementsInput(numOfElements) {
+      this.$emit('numOfElementsSliderInput', numOfElements);
     },
   },
 };

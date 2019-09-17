@@ -5,7 +5,13 @@
         <label for="speed-slider">Sort Speed</label>
       </div>
       <div class="slider-icon-wrapper">
-        <svg class="slider-icon" width="100%" viewBox="0 0 100 50">
+        <svg
+          class="slider-icon"
+          width="100%"
+          height="100%"
+          viewBox="0 0 100 50"
+          preserveAspectRatio="none"
+        >
           <polygon points="0 50, 100 50, 100 0" fill="#FFD23F" />
         </svg>
       </div>
@@ -40,18 +46,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../styles/mixins.scss';
+
 .speed-slider {
-  color: #FFD23F;
+  @include ui-element;
+   color: #FFD23F;
   .slider-label {
     display: flex;
     justify-content: space-between;
     align-content: center;
     .slider-icon-wrapper {
-      width: 24px;
+      width: 20%;
+      height: 10px;
     }
   }
   .range-slider {
-    margin-top: 2px;
+    margin-top: 8px;
     .range-slider-input {
       -webkit-appearance: none;
       width: 100%;
@@ -65,6 +75,7 @@ export default {
         height: 20px;
         background: black;
         border: 1px solid #FFD23F;
+        cursor: pointer;
       }
     }
   }

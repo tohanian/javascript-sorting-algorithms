@@ -8,12 +8,14 @@
         :sortType="sortType"
         :sortInProcess="sortInProcess"
         :showChanges="showChanges"
+        :numOfElementsSliderValue="numOfElementsSliderValue"
         @shuffle="onShuffle"
         @showHeights="onShowHeights"
         @showColorScale="onShowColorScale"
         @sortTypeSelect="onSortTypeSelect"
         @playButtonClick="onPlayButtonClick"
         @showChanges="onShowChanges"
+        @numOfElementsSliderInput="onNumOfElementsSliderInput"
       />
     </div>
     <div class="sorting-vis-wrapper">
@@ -53,11 +55,11 @@ export default {
       }],
 
       // Visualization params
-      numOfElements: 40,
       showHeights: true,
       showColorScale: true,
       showChanges: false,
       speedSliderValue: 85,
+      numOfElementsSliderValue: 4,
 
       // Sort states
       sortInProcess: false,
@@ -76,6 +78,10 @@ export default {
     },
     sortSpeed() {
       return scaleLinear().domain([0, 100]).range([500, 1])(this.speedSliderValue);
+    },
+    numOfElements() {
+      const numOfElementsOptions = [10, 25, 50, 60, 70, 80, 100, 150, 200];
+      return numOfElementsOptions[this.numOfElementsSliderValue];
     },
   },
   created() {
@@ -211,6 +217,10 @@ export default {
     },
     onSpeedSliderInput(speedSliderValue) {
       this.speedSliderValue = speedSliderValue;
+    },
+    onNumOfElementsSliderInput(numOfElementsSliderValue) {
+      this.numOfElementsSliderValue = numOfElementsSliderValue;
+      this.collection = this.initializeCollection();
     },
   },
 };

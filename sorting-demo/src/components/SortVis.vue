@@ -7,7 +7,8 @@
       :style="{
         height: `${showHeights ? item.height : '100'}%`,
         background: getItemColor(item),
-        border: `1px solid ${getItemBorderColor(item)}`
+        border: getItemBorder(item),
+        transition: getItemTransition(item),
       }"
     />
   </div>
@@ -16,6 +17,11 @@
 <script>
 export default {
   name: 'SortVis',
+  data() {
+    return {
+      numOfItemsTransition: false,
+    };
+  },
   props: {
     collection: {
       type: Array,
@@ -34,8 +40,21 @@ export default {
       default: false,
     },
   },
+  watch: {
+    collection(val, oldVal) {
+      if (val.length !== oldVal.length) {
+        this.numOfItemsTransition = true;
+        setTimeout(() => {
+          this.numOfItemsTransition = false;
+        }, 200);
+      }
+    },
+  },
   methods: {
     getItemColor(item) {
+      if (this.numOfItemsTransition) {
+        return '#F4869D';
+      }
       const baseColor = this.showColorScale ? item.colorScale : '#EE4266';
       if (this.showChanges && item.flag === 'insertItem') {
         return 'white';
@@ -51,6 +70,18 @@ export default {
       }
       return borderColor;
     },
+    getItemBorder(item) {
+      if (this.collection.length > 100) {
+        return 'none';
+      }
+      return `1px solid ${this.getItemBorderColor(item)}`;
+    },
+    getItemTransition() {
+      if (this.numOfItemsTransition) {
+        return 'none';
+      }
+      return 'background-color 1.1s ease-out';
+    },
   },
 };
 </script>
@@ -63,7 +94,6 @@ export default {
   align-items: flex-end;
   .sort-item {
     flex-basis: 100%;
-    transition: background-color 1.1s ease-out;
   }
 }
 </style>
