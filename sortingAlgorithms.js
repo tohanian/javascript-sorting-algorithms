@@ -10,3 +10,15 @@ function insertionSort(valuesToSort) {
 	}
 	return valuesToSort;
 }
+
+function bubbleSort(valuesToSort) {
+	for (let i = 0; i < valuesToSort.length; i++) {
+		for (let j = 0; j < valuesToSort.length - i - 1; j++) {
+			if (valuesToSort[j] > valuesToSort[j + 1]) {
+				let temp = valuesToSort[j];
+				valuesToSort[j] = valuesToSort[j + 1];
+				valuesToSort[j + 1] = temp;
+			}
+		}
+	}
+}
