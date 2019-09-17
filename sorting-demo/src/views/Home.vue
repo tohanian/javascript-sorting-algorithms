@@ -24,6 +24,7 @@
         :showHeights="showHeights"
         :showColorScale="showColorScale"
         :showChanges="showChanges"
+        :sortInProcess="sortInProcess"
       />
     </div>
     <div class="speed-slider-wrapper">
@@ -52,6 +53,8 @@ export default {
       sortType: 'insertionSort',
       sortTypeItems: [{
         text: 'Insertion Sort', value: 'insertionSort',
+      }, {
+        text: 'Bubble Sort', value: 'bubbleSort',
       }],
 
       // Visualization params
@@ -59,13 +62,13 @@ export default {
       showColorScale: true,
       showChanges: false,
       speedSliderValue: 85,
-      numOfElementsSliderValue: 4,
+      numOfElementsSliderValue: 1,
 
       // Sort states
       sortInProcess: false,
       outerLoopIndex: 0,
       outerLoopTimeout: undefined,
-      innerLoopIndex: undefined,
+      innerLoopIndex: 0,
       innerLoopTimeout: undefined,
     };
   },
@@ -131,7 +134,11 @@ export default {
     stopSorting() {
       clearTimeout(this.innerLoopTimeout);
       clearTimeout(this.outerLoopTimeout);
-      this.outerLoopIndex = this.innerLoopIndex + 1;
+      if (this.sortType === 'insertionSort') {
+        this.outerLoopIndex = this.innerLoopIndex + 1;
+      } else if (this.sortType === 'bubbleSort') {
+        // this.outerLoopIndex = this.outerLoopIndex - 1;
+      }
     },
     startSorting() {
       if (this.sortType && this[this.sortType]) {
@@ -169,12 +176,12 @@ export default {
                 insertionSortInnerLoop(j);
               } else {
                 valuesToSort = valuesToSort.map((item) => {
-                  if (item.flag === 'lastInserted') {
+                  if (item.flag === 'lastSorted') {
                     return { ...item, flag: 'sortedItem' };
                   }
                   return item;
                 });
-                valuesToSort[j + 1] = { ...temp, flag: 'lastInserted' };
+                valuesToSort[j + 1] = { ...temp, flag: 'lastSorted' };
 
                 this.collection = valuesToSort;
 
@@ -208,7 +215,7 @@ export default {
     },
     resetSortState() {
       this.outerLoopIndex = 0;
-      this.innerLoopIndex = undefined;
+      this.innerLoopIndex = 0;
       clearTimeout(this.outerLoopTimeout);
       clearTimeout(this.innerLoopTimeout);
     },
@@ -221,6 +228,60 @@ export default {
     onNumOfElementsSliderInput(numOfElementsSliderValue) {
       this.numOfElementsSliderValue = numOfElementsSliderValue;
       this.collection = this.initializeCollection();
+    },
+    bubbleSort() {
+      const valuesToSort = [...this.collection];
+      const bubbleSortOuterLoop = (i) => {
+        this.outerLoopTimeout = setTimeout(() => {
+          const bubbleSortInnerLoop = (j) => {
+            this.innerLoopTimeout = setTimeout(() => {
+              if (valuesToSort[j + 1] && valuesToSort[j].value > valuesToSort[j + 1].value) {
+                const temp = valuesToSort[j];
+                valuesToSort[j] = valuesToSort[j + 1];
+                valuesToSort[j + 1] = temp;
+              }
+
+              this.collection = valuesToSort.map((item, index) => {
+                if (index === j + 1) {
+                  return { ...item, flag: 'bubbleUpItem' };
+                } if (index === valuesToSort.length - i) {
+                  return { ...item, flag: 'lastSorted' };
+                }
+                return item;
+              });
+
+              j += 1;
+
+              if (j < valuesToSort.length - i - 1) {
+                this.innerLoopIndex = j;
+                bubbleSortInnerLoop(j);
+              } else if (i < valuesToSort.length) {
+                i += 1;
+                this.innerLoopIndex = 0;
+                this.outerLoopIndex = i;
+                bubbleSortOuterLoop(i);
+                this.collection = valuesToSort.map((item, index) => {
+                  if (index === j) {
+                    return { ...item, flag: 'bubbleUpItem' };
+                  }
+                  return item;
+                });
+              } else {
+                setTimeout(() => {
+                  this.collection = this.collection.map(item => ({
+                    ...item,
+                    flag: 'none',
+                  }));
+                  this.onSortComplete();
+                }, this.sortSpeed);
+              }
+            }, this.sortSpeed);
+          };
+          bubbleSortInnerLoop(this.innerLoopIndex);
+        }, this.sortSpeed);
+      };
+
+      bubbleSortOuterLoop(this.outerLoopIndex);
     },
   },
 };

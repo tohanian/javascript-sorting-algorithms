@@ -39,6 +39,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    sortInProcess: {
+      type: Boolean,
+      default: false,
+    },
   },
   watch: {
     collection(val, oldVal) {
@@ -55,16 +59,19 @@ export default {
       if (this.numOfItemsTransition) {
         return '#F4869D';
       }
+
       const baseColor = this.showColorScale ? item.colorScale : '#EE4266';
-      if (this.showChanges && item.flag === 'insertItem') {
-        return 'white';
+      if (this.showChanges) {
+        if (item.flag === 'compareItem') {
+          return 'white';
+        }
       }
       return baseColor;
     },
     getItemBorderColor(item) {
       let borderColor = 'black';
       if (this.showChanges) {
-        if (item.flag === 'insertItem' || item.flag === 'lastInserted') {
+        if (item.flag === 'compareItem' || item.flag === 'lastSorted') {
           borderColor = 'white';
         }
       }
@@ -76,11 +83,17 @@ export default {
       }
       return `1px solid ${this.getItemBorderColor(item)}`;
     },
-    getItemTransition() {
+    getItemTransition(item) {
       if (this.numOfItemsTransition) {
         return 'none';
+      } if (!this.sortInProcess) {
+        return 'background-color 1.1s ease-in';
       }
-      return 'background-color 1.1s ease-out';
+      if (item.flag === 'lastSorted') {
+        return 'background-color 0.8s ease-in';
+      }
+
+      return 'background-color .1s ease-in';
     },
   },
 };
