@@ -1,4 +1,4 @@
-<template>
+c`<template>
   <div class="home">
     <div class="sorting-options-wrapper">
       <SortOptions
@@ -55,6 +55,8 @@ export default {
         text: 'Insertion Sort', value: 'insertionSort',
       }, {
         text: 'Bubble Sort', value: 'bubbleSort',
+      }, {
+        text: 'Selection Sort', value: 'selectionSort',
       }],
 
       // Visualization params
@@ -137,7 +139,7 @@ export default {
       if (this.sortType === 'insertionSort') {
         this.outerLoopIndex = this.innerLoopIndex + 1;
       } else if (this.sortType === 'bubbleSort') {
-        // this.outerLoopIndex = this.outerLoopIndex - 1;
+        this.outerLoopIndex = this.outerLoopIndex - 1;
       }
     },
     startSorting() {
@@ -150,8 +152,7 @@ export default {
 
       const insertionSortOuterLoop = (outerLoopIndex) => {
         let i = outerLoopIndex;
-        this.$set(this.collection, i, { ...this.collection[i], flag: 'insertItem' });
-
+        this.$set(this.collection, i, { ...this.collection[i], flag: 'compareItem' });
 
         this.outerLoopTimeout = setTimeout(() => {
           const temp = valuesToSort[i];
@@ -243,7 +244,7 @@ export default {
 
               this.collection = valuesToSort.map((item, index) => {
                 if (index === j + 1) {
-                  return { ...item, flag: 'bubbleUpItem' };
+                  return { ...item, flag: 'compareItem' };
                 } if (index === valuesToSort.length - i) {
                   return { ...item, flag: 'lastSorted' };
                 }
@@ -262,7 +263,7 @@ export default {
                 bubbleSortOuterLoop(i);
                 this.collection = valuesToSort.map((item, index) => {
                   if (index === j) {
-                    return { ...item, flag: 'bubbleUpItem' };
+                    return { ...item, flag: 'compareItem' };
                   }
                   return item;
                 });
@@ -282,6 +283,83 @@ export default {
       };
 
       bubbleSortOuterLoop(this.outerLoopIndex);
+    },
+
+    selectionSort() {
+      const valuesToSort = [...this.collection];
+
+      const selectionSortOuterLoop = (outerLoopIndex) => {
+        this.outerLoopTimeout = setTimeout(() => {
+          let i = outerLoopIndex;
+          let min = i;
+
+          this.innerLoopIndex = i + 1;
+
+          const selectionSortInnerLoop = (innerLoopIndex) => {
+            let j = Math.max(innerLoopIndex, this.innerLoopIndex);
+            this.innerLoopIndex = j;
+
+            this.innerLoopTimeout = setTimeout(() => {
+              if (valuesToSort[j].value < valuesToSort[min].value) {
+                min = j;
+              }
+              this.collection = valuesToSort.map((item, index) => {
+                if (index < i - 1 || item.flag === 'scannedItem') {
+                  return { ...item, flag: 'none' };
+                } if (index === j) {
+                  return { ...item, flag: 'scannedItem' };
+                } if (index === min) {
+                  return { ...item, flag: 'compareItem' };
+                } if (index === i - 1) {
+                  return { ...item, flag: 'lastSorted' };
+                }
+                return { ...item };
+              });
+
+              j += 1;
+              this.innerLoopIndex = j;
+
+              if (j < valuesToSort.length) {
+                selectionSortInnerLoop(j);
+              } else {
+                if (min !== i) {
+                  const temp = valuesToSort[i];
+                  valuesToSort[i] = valuesToSort[min];
+                  valuesToSort[min] = temp;
+                }
+
+                this.collection = valuesToSort.map((item, index) => {
+                  if (index < i - 1 || item.flag === 'scannedItem') {
+                    return { ...item, flag: 'none' };
+                  } if (index === i) {
+                    return { ...item, flag: 'compareItem' };
+                  }
+                  return { ...item };
+                });
+
+                i += 1;
+                this.outerLoopIndex = i;
+
+                if (i < valuesToSort.length - 1) {
+                  selectionSortOuterLoop(i);
+                } else {
+                  setTimeout(() => {
+                    this.collection = this.collection.map(item => ({
+                      ...item,
+                      flag: 'none',
+                    }));
+                    this.onSortComplete();
+                  }, this.sortSpeed);
+                }
+              }
+            }, this.sortSpeed);
+          };
+
+          selectionSortInnerLoop(this.innerLoopIndex);
+        }, this.sortSpeed);
+      };
+
+      selectionSortOuterLoop(this.outerLoopIndex);
     },
   },
 };

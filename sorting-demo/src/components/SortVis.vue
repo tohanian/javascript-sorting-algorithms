@@ -73,6 +73,8 @@ export default {
       if (this.showChanges) {
         if (item.flag === 'compareItem' || item.flag === 'lastSorted') {
           borderColor = 'white';
+        } else if (item.flag === 'scannedItem') {
+          borderColor = 'white';
         }
       }
       return borderColor;

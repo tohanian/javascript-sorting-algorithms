@@ -1,14 +1,6 @@
 <template>
   <div class="sort-options">
-    <div class="ui-row">
-      <div class="ui-item">
-        <Button
-          class="shuffle-button"
-          @click="$emit('shuffle')"
-        >
-          Shuffle
-        </Button>
-      </div>
+    <div class="ui-row main-controls">
       <div class="ui-item">
         <Select
           placeholder="Sort Type"
@@ -18,13 +10,21 @@
         />
       </div>
       <div class="ui-item">
+        <Button
+          class="shuffle-button"
+          @click="$emit('shuffle')"
+        >
+          Shuffle
+        </Button>
+      </div>
+      <div class="ui-item">
         <PlayButton
           :sortInProcess="sortInProcess"
           @click="$emit('playButtonClick')"
         />
       </div>
     </div>
-    <div class="ui-row">
+    <div class="ui-row visual-options">
       <div class="ui-item">
         <Checkbox text="Show heights" :value="showHeights" @click="$emit('showHeights')" />
       </div>
@@ -34,7 +34,7 @@
       <div class="ui-item">
         <Checkbox text="Highlight changes" :value="showChanges" @click="$emit('showChanges')" />
       </div>
-      <div class="ui-item">
+      <div class="ui-item num-of-elements-wrapper">
         <NumOfElementsSlider :value="numOfElementsSliderValue" @input="onNumOfElementsInput" />
       </div>
     </div>
@@ -99,6 +99,15 @@ export default {
     align-items: center;
     .ui-item {
       margin: 0 12px;
+    }
+  }
+  .main-controls {
+    margin-bottom: 8px;
+  }
+  .visual-options {
+    flex-wrap: wrap;
+    .num-of-elements-wrapper {
+      min-width: 160px;
     }
   }
 }
