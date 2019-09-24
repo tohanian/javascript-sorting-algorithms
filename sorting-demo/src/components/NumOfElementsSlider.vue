@@ -1,11 +1,26 @@
 <template>
-  <div class="speed-slider">
+  <div class="speed-slider" :class="{ disabled }">
     <div class="slider-label">
       <div class="slider-icon-wrapper high-icon">
         <svg class="slider-icon" width="100%" viewBox="0 0 100 50">
-          <rect width="25" height="16" fill="#FFD23F" transform="translate(0, 34)" />
-          <rect width="25" height="32" fill="#FFD23F" transform="translate(37, 18)" />
-          <rect width="25" height="50" fill="#FFD23F" transform="translate(75, 0)" />
+          <rect
+            width="25"
+            height="16"
+            :fill="disabled ?'rgba(255, 210, 63, .5)' : '#FFD23F'"
+            transform="translate(0, 34)"
+          />
+          <rect
+            width="25"
+            height="32"
+            :fill="disabled ?'rgba(255, 210, 63, .5)' : '#FFD23F'"
+            transform="translate(37, 18)"
+          />
+          <rect
+            width="25"
+            height="50"
+            :fill="disabled ?'rgba(255, 210, 63, .5)' : '#FFD23F'"
+            transform="translate(75, 0)"
+          />
         </svg>
       </div>
       <div class="label-wrapper">
@@ -13,11 +28,36 @@
       </div>
       <div class="slider-icon-wrapper low-icon">
         <svg class="slider-icon" width="100%" viewBox="0 0 100 50">
-          <rect width="19" height="10" fill="#FFD23F" transform="translate(0, 40)" />
-          <rect width="19" height="20" fill="#FFD23F" transform="translate(20, 30)" />
-          <rect width="19" height="30" fill="#FFD23F" transform="translate(40, 20)" />
-          <rect width="19" height="40" fill="#FFD23F" transform="translate(60, 10)" />
-          <rect width="19" height="50" fill="#FFD23F" transform="translate(80, 0)" />
+          <rect
+            width="19"
+            height="10"
+            :fill="disabled ?'rgba(255, 210, 63, .5)' : '#FFD23F'"
+            transform="translate(0, 40)"
+          />
+          <rect
+            width="19"
+            height="20"
+            :fill="disabled ?'rgba(255, 210, 63, .5)' : '#FFD23F'"
+            transform="translate(20, 30)"
+          />
+          <rect
+            width="19"
+            height="30"
+            :fill="disabled ?'rgba(255, 210, 63, .5)' : '#FFD23F'"
+            transform="translate(40, 20)"
+          />
+          <rect
+            width="19"
+            height="40"
+            :fill="disabled ?'rgba(255, 210, 63, .5)' : '#FFD23F'"
+            transform="translate(60, 10)"
+          />
+          <rect
+            width="19"
+            height="50"
+            :fill="disabled ?'rgba(255, 210, 63, .5)' : '#FFD23F'"
+            transform="translate(80, 0)"
+          />
         </svg>
       </div>
     </div>
@@ -30,6 +70,7 @@
         step="1"
         min="0"
         max="8"
+        :disabled="disabled"
         @change="onChange"
       />
     </div>
@@ -43,6 +84,10 @@ export default {
     value: {
       type: Number,
       default: 4,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
@@ -93,6 +138,17 @@ export default {
         background: black;
         border: 1px solid #FFD23F;
         cursor: pointer;
+      }
+    }
+  }
+  &.disabled {
+    .range-slider {
+      .range-slider-input {
+        border: 1px solid rgba(255, 210, 63, .5);
+        &::-webkit-slider-thumb {
+          border: 1px solid rgba(255, 210, 63, .5);
+          cursor: default;
+        }
       }
     }
   }

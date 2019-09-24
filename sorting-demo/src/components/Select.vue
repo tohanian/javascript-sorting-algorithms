@@ -1,8 +1,9 @@
 <template>
-  <div class="select">
+  <div class="select" :class="{ disabled }">
     <Button
       class="select-button"
       ref="selectButton"
+      :disabled="disabled"
       @click="onOpenSelect"
     >
       <div class="select-button-content">
@@ -90,6 +91,10 @@ export default {
       type: String,
       default: null,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -107,7 +112,9 @@ export default {
   },
   methods: {
     onOpenSelect() {
-      this.menuOpen = !this.menuOpen;
+      if (!this.disabled) {
+        this.menuOpen = !this.menuOpen;
+      }
     },
     onMenuOpen(element) {
       const { width } = getComputedStyle(element);
@@ -215,6 +222,26 @@ export default {
       .button-content {
         .hover-transition {
           height: 100%;
+        }
+      }
+    }
+  }
+  &.disabled {
+    .button {
+      border: 1px solid rgba(255, 210, 63, .5);
+      cursor: default;
+      color: #FFD23F;
+    }
+    .button.select-button .select-button-content .select-icon {
+      border-left: 1px solid rgba(255, 210, 63, .5);
+      color: rgba(255, 210, 63, .5);
+    }
+    &:hover {
+      .button.select-button {
+        .button-content {
+          .hover-transition {
+            height: 0;
+          }
         }
       }
     }

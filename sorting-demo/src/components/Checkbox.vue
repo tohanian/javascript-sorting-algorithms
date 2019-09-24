@@ -38,6 +38,7 @@ export default {
   .checkbox-control {
     border: 1px solid #FFD23F;
     width: 16px;
+    min-width: 16px;
     height: 16px;
     margin-right: 12px;
     cursor: pointer;

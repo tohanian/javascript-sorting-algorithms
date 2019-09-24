@@ -1,41 +1,65 @@
 <template>
   <div class="sort-options">
     <div class="ui-row main-controls">
-      <div class="ui-item">
+      <div class="ui-item sort-type-select-wrapper">
         <Select
           placeholder="Sort Type"
           :items="sortTypeItems"
           :value="sortType"
+          :disabled="sortInProcess"
           @input="(sortType) => $emit('sortTypeSelect', sortType)"
         />
       </div>
-      <div class="ui-item">
+      <div class="ui-item num-of-elements-wrapper hide-mobile">
+        <NumOfElementsSlider
+          :disabled="sortInProcess"
+          :value="numOfElementsSliderValue"
+          @input="onNumOfElementsInput"
+        />
+      </div>
+      <div class="ui-item shuffle-button-wrapper hide-mobile">
         <Button
           class="shuffle-button"
+          :disabled="sortInProcess"
           @click="$emit('shuffle')"
         >
           Shuffle
         </Button>
       </div>
-      <div class="ui-item">
+      <div class="ui-item play-button-wrapper">
         <PlayButton
           :sortInProcess="sortInProcess"
           @click="$emit('playButtonClick')"
         />
       </div>
     </div>
+    <div class="ui-row display-mobile">
+      <div class="ui-item num-of-elements-wrapper">
+        <NumOfElementsSlider
+          :disabled="sortInProcess"
+          :value="numOfElementsSliderValue"
+          @input="onNumOfElementsInput"
+        />
+      </div>
+      <div class="ui-item shuffle-button-wrapper">
+        <Button
+          class="shuffle-button"
+          :disabled="sortInProcess"
+          @click="$emit('shuffle')"
+        >
+          Shuffle
+        </Button>
+      </div>
+    </div>
     <div class="ui-row visual-options">
-      <div class="ui-item">
+      <div class="ui-item show-heights">
         <Checkbox text="Show heights" :value="showHeights" @click="$emit('showHeights')" />
       </div>
-      <div class="ui-item">
+      <div class="ui-item show-colors">
         <Checkbox text="Show colors" :value="showColorScale" @click="$emit('showColorScale')" />
       </div>
-      <div class="ui-item">
+      <div class="ui-item show-changes">
         <Checkbox text="Highlight changes" :value="showChanges" @click="$emit('showChanges')" />
-      </div>
-      <div class="ui-item num-of-elements-wrapper">
-        <NumOfElementsSlider :value="numOfElementsSliderValue" @input="onNumOfElementsInput" />
       </div>
     </div>
   </div>
@@ -95,19 +119,56 @@ export default {
 .sort-options {
   .ui-row {
     display: flex;
-    margin: 0 -12px;
     align-items: center;
+    width: 100%;
+    justify-content: flex-start;
     .ui-item {
       margin: 0 12px;
+    }
+    .num-of-elements-wrapper {
+      flex-grow: 1;
+      max-width: 260px;
+    }
+    .play-button-wrapper {
+      flex-grow: 1;
+    text-align: right;
     }
   }
   .main-controls {
     margin-bottom: 8px;
   }
   .visual-options {
-    flex-wrap: wrap;
-    .num-of-elements-wrapper {
-      min-width: 160px;
+    .ui-item {
+      width: 33%;
+    }
+    .show-heights {
+      width: 30%
+    }
+    .show-colors {
+      width: 30%;
+    }
+    .show-changes {
+      width: 40%;
+    }
+  }
+  .display-mobile {
+    display: none;
+    margin-top: 14px;
+    margin-bottom: 8px;
+    justify-content: space-between;
+  }
+  @media only screen and (max-width: 650px) {
+    .display-mobile {
+      display: flex;
+    }
+    .hide-mobile {
+      display: none;
+    }
+  }
+  @media only screen and (min-width: 950px) {
+    flex-grow: 0;
+    .play-button-wrapper {
+      text-align: left;
     }
   }
 }

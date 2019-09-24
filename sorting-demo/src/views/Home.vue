@@ -51,13 +51,20 @@ export default {
     return {
       collection: [],
       sortType: 'insertionSort',
-      sortTypeItems: [{
-        text: 'Insertion Sort', value: 'insertionSort',
-      }, {
-        text: 'Bubble Sort', value: 'bubbleSort',
-      }, {
-        text: 'Selection Sort', value: 'selectionSort',
-      }],
+      sortTypeItems: [
+        {
+          text: 'Insertion Sort',
+          value: 'insertionSort',
+        },
+        {
+          text: 'Bubble Sort',
+          value: 'bubbleSort',
+        },
+        {
+          text: 'Selection Sort',
+          value: 'selectionSort',
+        },
+      ],
 
       // Visualization params
       showHeights: true,
@@ -76,13 +83,17 @@ export default {
   },
   computed: {
     heightScale() {
-      return scaleLinear().domain([0, this.numOfElements]).range([1, 100]);
+      return scaleLinear()
+        .domain([0, this.numOfElements])
+        .range([1, 100]);
     },
     colorScale() {
       return scaleSequential(interpolateTurbo).domain([0, this.numOfElements]);
     },
     sortSpeed() {
-      return scaleLinear().domain([0, 100]).range([500, 1])(this.speedSliderValue);
+      return scaleLinear()
+        .domain([0, 100])
+        .range([500, 1])(this.speedSliderValue);
     },
     numOfElements() {
       const numOfElementsOptions = [10, 25, 50, 60, 70, 80, 100, 150, 200];
@@ -150,14 +161,17 @@ export default {
     insertionSort() {
       let valuesToSort = [...this.collection];
 
-      const insertionSortOuterLoop = (outerLoopIndex) => {
+      const insertionSortOuterLoop = outerLoopIndex => {
         let i = outerLoopIndex;
-        this.$set(this.collection, i, { ...this.collection[i], flag: 'compareItem' });
+        this.$set(this.collection, i, {
+          ...this.collection[i],
+          flag: 'compareItem',
+        });
 
         this.outerLoopTimeout = setTimeout(() => {
           const temp = valuesToSort[i];
 
-          const insertionSortInnerLoop = (innerLoopIndex) => {
+          const insertionSortInnerLoop = innerLoopIndex => {
             let j = innerLoopIndex;
 
             this.innerLoopTimeout = setTimeout(() => {
@@ -176,7 +190,7 @@ export default {
 
                 insertionSortInnerLoop(j);
               } else {
-                valuesToSort = valuesToSort.map((item) => {
+                valuesToSort = valuesToSort.map(item => {
                   if (item.flag === 'lastSorted') {
                     return { ...item, flag: 'sortedItem' };
                   }
@@ -232,11 +246,14 @@ export default {
     },
     bubbleSort() {
       const valuesToSort = [...this.collection];
-      const bubbleSortOuterLoop = (i) => {
+      const bubbleSortOuterLoop = i => {
         this.outerLoopTimeout = setTimeout(() => {
-          const bubbleSortInnerLoop = (j) => {
+          const bubbleSortInnerLoop = j => {
             this.innerLoopTimeout = setTimeout(() => {
-              if (valuesToSort[j + 1] && valuesToSort[j].value > valuesToSort[j + 1].value) {
+              if (
+                valuesToSort[j + 1] &&
+                valuesToSort[j].value > valuesToSort[j + 1].value
+              ) {
                 const temp = valuesToSort[j];
                 valuesToSort[j] = valuesToSort[j + 1];
                 valuesToSort[j + 1] = temp;
@@ -245,7 +262,8 @@ export default {
               this.collection = valuesToSort.map((item, index) => {
                 if (index === j + 1) {
                   return { ...item, flag: 'compareItem' };
-                } if (index === valuesToSort.length - i) {
+                }
+                if (index === valuesToSort.length - i) {
                   return { ...item, flag: 'lastSorted' };
                 }
                 return item;
@@ -288,14 +306,14 @@ export default {
     selectionSort() {
       const valuesToSort = [...this.collection];
 
-      const selectionSortOuterLoop = (outerLoopIndex) => {
+      const selectionSortOuterLoop = outerLoopIndex => {
         this.outerLoopTimeout = setTimeout(() => {
           let i = outerLoopIndex;
           let min = i;
 
           this.innerLoopIndex = i + 1;
 
-          const selectionSortInnerLoop = (innerLoopIndex) => {
+          const selectionSortInnerLoop = innerLoopIndex => {
             let j = Math.max(innerLoopIndex, this.innerLoopIndex);
             this.innerLoopIndex = j;
 
@@ -306,11 +324,14 @@ export default {
               this.collection = valuesToSort.map((item, index) => {
                 if (index < i - 1 || item.flag === 'scannedItem') {
                   return { ...item, flag: 'none' };
-                } if (index === j) {
+                }
+                if (index === j) {
                   return { ...item, flag: 'scannedItem' };
-                } if (index === min) {
+                }
+                if (index === min) {
                   return { ...item, flag: 'compareItem' };
-                } if (index === i - 1) {
+                }
+                if (index === i - 1) {
                   return { ...item, flag: 'lastSorted' };
                 }
                 return { ...item };
@@ -331,7 +352,8 @@ export default {
                 this.collection = valuesToSort.map((item, index) => {
                   if (index < i - 1 || item.flag === 'scannedItem') {
                     return { ...item, flag: 'none' };
-                  } if (index === i) {
+                  }
+                  if (index === i) {
                     return { ...item, flag: 'compareItem' };
                   }
                   return { ...item };
@@ -378,12 +400,15 @@ export default {
   }
   .sorting-vis-wrapper {
     width: 92%;
-    height: 100%;
     margin: 20px auto;
+    flex-grow: 1;
+    flex-basis: 100%;
   }
   .speed-slider-wrapper {
     width: 92%;
-    margin: 10px auto;
+    margin: 0 auto;
+    margin-top: 0;
+    margin-bottom: 20px;
     max-width: 400px;
   }
 }

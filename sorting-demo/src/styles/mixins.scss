@@ -3,4 +3,7 @@
   font-size: 14px;
   text-transform: lowercase;
   letter-spacing: .2em;
+  @media screen and (max-width: 400px) {
+    font-size: 11px;
+  }
 }

@@ -1,5 +1,5 @@
 <template>
-  <button class="button" @click="$emit('click')">
+  <button class="button" :class="{ disabled }" :disabled="disabled" @click="$emit('click')">
     <div class="button-content">
       <div class="button-text">
         <slot />
@@ -12,6 +12,12 @@
 <script>
 export default {
   name: 'Button',
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
 };
 </script>
 
@@ -55,6 +61,18 @@ export default {
     .button-content {
       .hover-transition {
         background: darken(#FFD23F, 52%);
+      }
+    }
+  }
+  &:disabled {
+    color: rgba(255, 210, 63, .5);
+    border-color: rgba(255, 210, 63, .5);
+    cursor: default;
+    &:hover {
+      .button-content {
+        .hover-transition {
+          height: 0;
+        }
       }
     }
   }
