@@ -1,4 +1,4 @@
-c`<template>
+<template>
   <div class="home">
     <div class="sorting-options-wrapper">
       <SortOptions
@@ -70,11 +70,13 @@ export default {
       showHeights: true,
       showColorScale: true,
       showChanges: false,
-      speedSliderValue: 85,
+      speedSliderValue: 50,
       numOfElementsSliderValue: 1,
 
       // Sort states
       sortInProcess: false,
+      sortComplete: true,
+      collectionShuffled: false,
       outerLoopIndex: 0,
       outerLoopTimeout: undefined,
       innerLoopIndex: 0,
@@ -93,7 +95,7 @@ export default {
     sortSpeed() {
       return scaleLinear()
         .domain([0, 100])
-        .range([500, 1])(this.speedSliderValue);
+        .range([500, 0])(this.speedSliderValue);
     },
     numOfElements() {
       const numOfElementsOptions = [10, 25, 50, 60, 70, 80, 100, 150, 200];
@@ -133,15 +135,22 @@ export default {
       this.showColorScale = !this.showColorScale;
     },
     onSortTypeSelect(sortType) {
-      this.sortType = sortType;
+      if (sortType !== this.sortType) {
+        this.sortType = sortType;
+        this.resetSortState();
+      }
     },
     onPlayButtonClick() {
-      this.sortInProcess = !this.sortInProcess;
-
+      this.sortComplete = false;
       if (this.sortInProcess) {
-        this.startSorting();
-      } else {
+        this.sortInProcess = false;
         this.stopSorting();
+      } else if (this.isCollectionSorted()) {
+        this.sortInProcess = true;
+        this.shuffleThenStartSorting();
+      } else {
+        this.sortInProcess = true;
+        this.startSorting();
       }
     },
     stopSorting() {
@@ -231,8 +240,10 @@ export default {
     resetSortState() {
       this.outerLoopIndex = 0;
       this.innerLoopIndex = 0;
+      this.sortComplete = true;
       clearTimeout(this.outerLoopTimeout);
       clearTimeout(this.innerLoopTimeout);
+      this.collection = this.initializeCollection();
     },
     onShowChanges() {
       this.showChanges = !this.showChanges;
@@ -382,6 +393,23 @@ export default {
       };
 
       selectionSortOuterLoop(this.outerLoopIndex);
+    },
+    isCollectionSorted() {
+      const isSomeValueUnsorted = this.collection.some((item, index) => {
+        if (index === 0) {
+          return false;
+        } if (this.collection[index - 1].value <= item.value) {
+          return false;
+        }
+        return true;
+      });
+      return !isSomeValueUnsorted;
+    },
+    shuffleThenStartSorting() {
+      this.collection = this.shuffleCollection(this.initializeCollection()).slice();
+      setTimeout(() => {
+        this.startSorting();
+      }, 500);
     },
   },
 };
