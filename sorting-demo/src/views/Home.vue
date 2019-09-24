@@ -161,7 +161,7 @@ export default {
     insertionSort() {
       let valuesToSort = [...this.collection];
 
-      const insertionSortOuterLoop = outerLoopIndex => {
+      const insertionSortOuterLoop = (outerLoopIndex) => {
         let i = outerLoopIndex;
         this.$set(this.collection, i, {
           ...this.collection[i],
@@ -171,7 +171,7 @@ export default {
         this.outerLoopTimeout = setTimeout(() => {
           const temp = valuesToSort[i];
 
-          const insertionSortInnerLoop = innerLoopIndex => {
+          const insertionSortInnerLoop = (innerLoopIndex) => {
             let j = innerLoopIndex;
 
             this.innerLoopTimeout = setTimeout(() => {
@@ -190,7 +190,7 @@ export default {
 
                 insertionSortInnerLoop(j);
               } else {
-                valuesToSort = valuesToSort.map(item => {
+                valuesToSort = valuesToSort.map((item) => {
                   if (item.flag === 'lastSorted') {
                     return { ...item, flag: 'sortedItem' };
                   }
@@ -246,13 +246,13 @@ export default {
     },
     bubbleSort() {
       const valuesToSort = [...this.collection];
-      const bubbleSortOuterLoop = i => {
+      const bubbleSortOuterLoop = (i) => {
         this.outerLoopTimeout = setTimeout(() => {
-          const bubbleSortInnerLoop = j => {
+          const bubbleSortInnerLoop = (j) => {
             this.innerLoopTimeout = setTimeout(() => {
               if (
-                valuesToSort[j + 1] &&
-                valuesToSort[j].value > valuesToSort[j + 1].value
+                valuesToSort[j + 1]
+                && valuesToSort[j].value > valuesToSort[j + 1].value
               ) {
                 const temp = valuesToSort[j];
                 valuesToSort[j] = valuesToSort[j + 1];
@@ -306,14 +306,14 @@ export default {
     selectionSort() {
       const valuesToSort = [...this.collection];
 
-      const selectionSortOuterLoop = outerLoopIndex => {
+      const selectionSortOuterLoop = (outerLoopIndex) => {
         this.outerLoopTimeout = setTimeout(() => {
           let i = outerLoopIndex;
           let min = i;
 
           this.innerLoopIndex = i + 1;
 
-          const selectionSortInnerLoop = innerLoopIndex => {
+          const selectionSortInnerLoop = (innerLoopIndex) => {
             let j = Math.max(innerLoopIndex, this.innerLoopIndex);
             this.innerLoopIndex = j;
 
