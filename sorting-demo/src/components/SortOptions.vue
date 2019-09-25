@@ -14,6 +14,7 @@
         <NumOfElementsSlider
           :disabled="sortInProcess"
           :value="numOfElementsSliderValue"
+          :numOfElements="numOfElements"
           @input="onNumOfElementsInput"
         />
       </div>
@@ -38,6 +39,7 @@
         <NumOfElementsSlider
           :disabled="sortInProcess"
           :value="numOfElementsSliderValue"
+          :numOfElements="numOfElements"
           @input="onNumOfElementsInput"
         />
       </div>
@@ -105,6 +107,9 @@ export default {
     numOfElementsSliderValue: {
       type: Number,
       default: 4,
+    },
+    numOfElements: {
+      type: Number,
     },
   },
   methods: {

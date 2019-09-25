@@ -57,7 +57,7 @@ export default {
   methods: {
     getItemColor(item) {
       if (this.numOfItemsTransition) {
-        return '#fa4688';
+        return '#0f0f0f';
       }
 
       const baseColor = this.showColorScale ? item.colorScale : '#EE4266';

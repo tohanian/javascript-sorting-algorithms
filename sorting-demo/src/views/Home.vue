@@ -9,6 +9,7 @@
         :sortInProcess="sortInProcess"
         :showChanges="showChanges"
         :numOfElementsSliderValue="numOfElementsSliderValue"
+        :numOfElements="numOfElements"
         @shuffle="onShuffle"
         @showHeights="onShowHeights"
         @showColorScale="onShowColorScale"
@@ -29,6 +30,13 @@
     </div>
     <div class="speed-slider-wrapper">
       <SpeedSlider :value="speedSliderValue" @input="onSpeedSliderInput" />
+    </div>
+    <div class="about-link-wrapper">
+      <router-link to="/about">
+        <div class="about-link">
+          About <span class="arrow">&#9654;</span>
+        </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -69,7 +77,7 @@ export default {
       // Visualization params
       showHeights: true,
       showColorScale: true,
-      showChanges: false,
+      showChanges: true,
       speedSliderValue: 50,
       numOfElementsSliderValue: 1,
 
@@ -98,7 +106,7 @@ export default {
         .range([500, 0])(this.speedSliderValue);
     },
     numOfElements() {
-      const numOfElementsOptions = [10, 25, 50, 60, 70, 80, 100, 150, 200];
+      const numOfElementsOptions = [5, 10, 25, 50, 75, 100, 150, 200];
       return numOfElementsOptions[this.numOfElementsSliderValue];
     },
   },
@@ -253,6 +261,7 @@ export default {
     },
     onNumOfElementsSliderInput(numOfElementsSliderValue) {
       this.numOfElementsSliderValue = numOfElementsSliderValue;
+      this.resetSortState();
       this.collection = this.initializeCollection();
     },
     bubbleSort() {
@@ -438,6 +447,27 @@ export default {
     margin-top: 0;
     margin-bottom: 20px;
     max-width: 400px;
+  }
+  .about-link-wrapper {
+    font-size: 14px;
+    display: flex;
+    justify-content: flex-end;
+    @media screen and (max-width: 400px) {
+      font-size: 11px;
+    }
+    .about-link {
+      padding: 8px 12px;
+      background: rgb(20, 20, 20);
+      color: white;
+      .arrow {
+        font-size: 8px;
+        position: relative;
+        top: -1px;
+      }
+      &:hover {
+        color: lightgrey;
+      }
+    }
   }
 }
 </style>

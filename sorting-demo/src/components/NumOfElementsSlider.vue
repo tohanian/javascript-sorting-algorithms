@@ -24,7 +24,7 @@
         </svg>
       </div>
       <div class="label-wrapper">
-        <label for="items-slider">Items</label>
+        <label for="items-slider">Items: {{ numOfElements }}</label>
       </div>
       <div class="slider-icon-wrapper low-icon">
         <svg class="slider-icon" width="100%" viewBox="0 0 100 50">
@@ -69,7 +69,7 @@
         :value="value"
         step="1"
         min="0"
-        max="8"
+        max="7"
         :disabled="disabled"
         @change="onChange"
       />
@@ -88,6 +88,9 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    numOfElements: {
+      type: Number,
     },
   },
   methods: {
@@ -120,6 +123,9 @@ export default {
     }
     .label-wrapper {
       flex-grow: 1;
+      & > label {
+        white-space: nowrap;
+      }
     }
   }
   .range-slider {
