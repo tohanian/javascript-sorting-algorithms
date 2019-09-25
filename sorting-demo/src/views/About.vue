@@ -28,7 +28,14 @@
     <div class="back-wrapper">
       <router-link to="/">
         <div class="back-link">
-          <span class="arrow">&#9664;</span> Back to JS Sort
+          <span class="arrow">
+            <img
+              :src="require('../assets/triangle-16.png')"
+              width="8px"
+              :style="{ transform: 'rotate(-90deg)' }"
+            />
+          </span>
+          Back to JS Sort
         </div>
       </router-link>
     </div>
@@ -40,6 +47,7 @@
   margin: 0 auto;
   overflow-y: scroll;
   max-width: 560px;
+  height: 100%;
   .content {
     margin: 32px;
     h1 {

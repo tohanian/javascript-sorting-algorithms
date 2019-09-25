@@ -34,7 +34,14 @@
     <div class="about-link-wrapper">
       <router-link to="/about">
         <div class="about-link">
-          About <span class="arrow">&#9654;</span>
+          About
+          <span class="arrow">
+            <img
+              :src="require('../assets/triangle-16.png')"
+              width="8px"
+              :style="{ transform: 'rotate(90deg)' }"
+            />
+          </span>
         </div>
       </router-link>
     </div>
@@ -84,7 +91,6 @@ export default {
       // Sort states
       sortInProcess: false,
       sortComplete: true,
-      collectionShuffled: false,
       outerLoopIndex: 0,
       outerLoopTimeout: undefined,
       innerLoopIndex: 0,
@@ -127,7 +133,8 @@ export default {
       return collection;
     },
     onShuffle() {
-      this.collection = this.shuffleCollection(this.collection).slice();
+      this.resetSortState();
+      this.collection = this.shuffleCollection(this.initializeCollection()).slice();
     },
     shuffleCollection(collection) {
       for (let i = collection.length - 1; i > 0; i -= 1) {
@@ -445,25 +452,25 @@ export default {
     width: 92%;
     margin: 0 auto;
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     max-width: 400px;
   }
-  .about-link-wrapper {
+  .about-link-wrapper::v-deep {
     font-size: 14px;
     display: flex;
     justify-content: flex-end;
     @media screen and (max-width: 400px) {
       font-size: 11px;
     }
+    a {
+      height: 100%;
+    }
     .about-link {
-      padding: 8px 12px;
+      padding: 6px 12px;
       background: rgb(20, 20, 20);
       color: white;
-      .arrow {
-        font-size: 8px;
-        position: relative;
-        top: -1px;
-      }
+      margin-bottom: 28px;
+      border: 1px solid lightgrey;
       &:hover {
         color: lightgrey;
       }
